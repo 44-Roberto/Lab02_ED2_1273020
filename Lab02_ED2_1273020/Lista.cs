@@ -33,7 +33,7 @@ namespace Lab02_ED2_1273020
         }
 
         //Metodo para añadir a la lista
-        public void Add_Lista(string Name, string Dpi, string BD, string Address, T value)
+        public void Add_Lista(string Name, string Dpi, string BD, string Address,string[] Comp, T value)
         {
             //Instancio variables auxiliares
             nodo nuevoNodo = new nodo();
@@ -45,6 +45,8 @@ namespace Lab02_ED2_1273020
             nuevoNodo.dpi = Dpi;
             nuevoNodo.address = Address;
             nuevoNodo.datebirth = BD;
+            nuevoNodo.companies = Comp;
+            
 
             //Añado el nodo a la lista
             if (Header == null)
@@ -66,7 +68,7 @@ namespace Lab02_ED2_1273020
         }
 
         //Metodo para actualizar los datos
-        public void EditItem(string Name, string Dpi, string BD, string Address, T value)
+        public void EditItem(string Name, string Dpi, string BD, string Address,string[] Comp, T value)
         {
             nodo Temp = Header;
 
@@ -77,6 +79,8 @@ namespace Lab02_ED2_1273020
                     Temp.valor = value;
                     Temp.address = Address;
                     Temp.datebirth = BD;
+                    Temp.companies = Comp;
+                       
 
                     return;
                 }
