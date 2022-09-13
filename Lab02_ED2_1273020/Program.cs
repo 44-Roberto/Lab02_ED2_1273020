@@ -20,14 +20,99 @@ namespace Lab02_ED2_1273020
             public string[] companies { get; set; }
         }
 
+   
+    
         internal class Program
         {
 
-            static void Main(string[] args)
+        
+
+        static void Main(string[] args)
             {
-                //Comienza el procedimiento de lectura del archivo
-                //************* SE DEBE DE INSERTAR LA DIRECCIÓN DEL ARCHIVO***************
-                var reader = new StreamReader(File.OpenRead(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\Pruebita.txt"));
+
+            List<string> L_Comp = new List<string>();
+            //Metodos publicos de compresion LZ78
+            //Variables 
+            int puntero = 0;
+            string texto = "";
+            string SigCaracter = "";
+
+            string LZ_Comprimir(string CompDPI)
+            {
+                string CompCaracter = "";
+                int index = 0;
+                int regresar = 0;
+                texto = "0" + CompDPI[0]+";";
+                L_Comp.Add("");//Primer elemento nulo
+                L_Comp.Add(CompDPI[0] + "");
+
+                for (int indiceTexto = 1; index < CompDPI.Length; index++)
+                {
+                    CompCaracter += CompDPI[index];
+
+                    if (L_Comp.IndexOf(CompCaracter) != -1)
+                    {
+                        index = L_Comp.IndexOf(CompCaracter);
+                        regresar = 1;
+                        if (indiceTexto + 1 == CompDPI.Length)
+                        {
+                            texto += index + "null";
+                        }
+                    }
+                    else
+                    {
+                        if (regresar == 1)
+                        {
+                            texto += index + " " + CompCaracter[CompCaracter.Length - 1] + ";";
+                        }
+                        else
+                        {
+                            texto += "0 " + CompCaracter + ";";
+                        }
+                        L_Comp.Add(CompCaracter);
+                        CompCaracter = "";
+                        regresar = 0;
+                    }
+                }
+
+
+                return texto;
+            }
+
+            string LZ_Descomprimir(string EncodeID)
+            {
+                texto = "";
+                string[] CompararResultado = EncodeID.Split(';');
+
+                for(int i =0; i<EncodeID.Length; i++)
+                {
+                    if(CompararResultado[i].Length ==0)
+                    {
+                        break;
+                    }
+                    puntero = int.Parse(CompararResultado[i]);
+                    SigCaracter = CompararResultado[i + 1];
+
+                    if(SigCaracter!="null")
+                    {
+                        texto += L_Comp[puntero] + SigCaracter;
+                    }
+                    else
+                    {
+                        texto+= L_Comp[puntero];
+                    }
+                }
+                puntero = 0;
+                SigCaracter = "";
+
+
+                return texto;
+            }
+
+
+            //Comienza el procedimiento de lectura del archivo
+            //************* SE DEBE DE INSERTAR LA DIRECCIÓN DEL ARCHIVO***************
+            var reader = new StreamReader(File.OpenRead(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\Pruebita.txt"));
                 // List<string> list = new List<string>(); Listas que utilicé para pruebas pero no se utilizan
                 // List<string> list2 = new List<string>();
                 Lista<Persona> listaJSon = new Lista<Persona>(); //Instancio mi Lista para guardar los archivos del JSon
@@ -45,7 +130,7 @@ namespace Lab02_ED2_1273020
 
                     string jsonString = values[1];//Paso a una cadena string el contenido de values[1], que es donde está la cadena json
                     Persona personaN = JsonSerializer.Deserialize<Persona>(jsonString);//deserializo el string con el json y lo guardo en mi clase persona
-
+                   
                     //Comienza la validación de la acción
                     if ("INSERT" == values[0]) //Si es "INSERT" insertará en la List para el json
                     {
