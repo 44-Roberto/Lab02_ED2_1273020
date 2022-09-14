@@ -279,7 +279,80 @@ namespace Lab02_ED2_1273020
                         {
                             Console.WriteLine("No se encontró.");
                         }
+                        int llave2=0;
+                    //*********Codificar o decodificar
+                    while (true)
+                    {
+                        Console.WriteLine("\n\n1) Mostrar los datos codificados");
+                        Console.WriteLine("2) Mostrar los datos decodificados");
+                        Console.WriteLine("3) Salir al menú.");
+                        llave2 = Convert.ToInt32(Console.ReadLine());
 
+
+                        if (llave2 == 1)
+                        {
+                            for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
+                            {
+
+                                if (listaJSon.Get(i).dpi == dpiBus)
+                                {
+                                    varaux++;//Incremento mi auxiliar si encontró la persona
+                                             //Escribo en consola la paersona buscada
+                                    Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name );
+
+                                    foreach (var s in listaJSon.Get(i).companies)
+                                    {
+
+                                        Console.WriteLine(s);
+                                    }
+
+
+                                }
+                            }
+
+                        }
+                        else if (llave2 == 2)
+                        {
+                            for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
+                            {
+
+                                if (listaJSon.Get(i).dpi == dpiBus)
+                                {
+                                    varaux++;//Incremento mi auxiliar si encontró la persona
+                                             //Escribo en consola la paersona buscada
+                                    Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name );
+
+                                    foreach (var s in listaJSon.Get(i).companies)
+                                    {
+                                        string txtAux = "";
+                                        txtAux =LZ_Descomprimir(listaJSon.Get(i).listaCOmp, s);
+                                        string txtDpi = "";
+                                        string txtComp = "";
+                                        for(int j = 0; j < txtAux.Length; j++)
+                                        {
+                                            if (j < 13)
+                                            {
+                                                txtDpi+= txtAux[j];
+                                            }
+                                            else
+                                            {
+                                                txtComp+=txtAux[j];
+                                            }
+                                        }
+
+                                        Console.WriteLine("dpi: "+txtDpi+"\tcompañía: "+txtComp);
+                                    }
+
+
+                                }
+                            }
+                        }
+                        else if(llave2 == 3)
+                        {
+                            break;
+                        }
+
+                    }
                 }
                 else if (llave == 3)
                 {
