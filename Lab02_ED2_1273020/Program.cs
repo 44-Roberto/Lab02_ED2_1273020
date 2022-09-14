@@ -18,7 +18,9 @@ namespace Lab02_ED2_1273020
             public string datebirth { get; set; }//Fecha de nacimiento
             public string address { get; set; } //Dirección(localidad)
             public string[] companies { get; set; }
-        }
+
+            public List<string> listaCOmp = new List<string>();
+    }
 
    
     
@@ -30,25 +32,25 @@ namespace Lab02_ED2_1273020
         static void Main(string[] args)
             {
 
-            List<string> L_Comp = new List<string>();
+           
             //Metodos publicos de compresion LZ78
             //Variables 
-            int puntero = 0;
-            string texto = "";
-            string SigCaracter = "";
+           
 
-            string LZ_Comprimir(string CompDPI)
+            string LZ_Comprimir(List<string> L_Comp, string CompDPI)
             {
+                
+                string texto = "";
                 string CompCaracter = "";
                 int index = 0;
                 int regresar = 0;
-                texto = "0" + CompDPI[0]+";";
+                texto = "0 " + CompDPI[0]+"\n";
                 L_Comp.Add("");//Primer elemento nulo
                 L_Comp.Add(CompDPI[0] + "");
 
-                for (int indiceTexto = 1; index < CompDPI.Length; index++)
+                for (int indiceTexto = 1; indiceTexto < CompDPI.Length; indiceTexto++)
                 {
-                    CompCaracter += CompDPI[index];
+                    CompCaracter += CompDPI[indiceTexto];
 
                     if (L_Comp.IndexOf(CompCaracter) != -1)
                     {
@@ -56,18 +58,18 @@ namespace Lab02_ED2_1273020
                         regresar = 1;
                         if (indiceTexto + 1 == CompDPI.Length)
                         {
-                            texto += index + "null";
+                            texto += index + " null\n";
                         }
                     }
                     else
                     {
                         if (regresar == 1)
                         {
-                            texto += index + " " + CompCaracter[CompCaracter.Length - 1] + ";";
+                            texto += index + " " + CompCaracter[CompCaracter.Length - 1] + "\n";
                         }
                         else
                         {
-                            texto += "0 " + CompCaracter + ";";
+                            texto += "0 " + CompCaracter + "\n";
                         }
                         L_Comp.Add(CompCaracter);
                         CompCaracter = "";
@@ -79,12 +81,15 @@ namespace Lab02_ED2_1273020
                 return texto;
             }
 
-            string LZ_Descomprimir(string EncodeID)
-            {
-                texto = "";
-                string[] CompararResultado = EncodeID.Split(';');
+            int puntero = 0;
+            string SigCaracter = "";
 
-                for(int i =0; i<EncodeID.Length; i++)
+            string LZ_Descomprimir(List<string> L_Comp, string EncodeID)
+            {
+                string texto = "";
+                string[] CompararResultado = EncodeID.Split();
+                
+                for(int i =0; i<EncodeID.Length; i+=2)
                 {
                     if(CompararResultado[i].Length ==0)
                     {
@@ -101,11 +106,13 @@ namespace Lab02_ED2_1273020
                     {
                         texto+= L_Comp[puntero];
                     }
+                    puntero = 0;
+                    SigCaracter = "";
                 }
+
                 puntero = 0;
                 SigCaracter = "";
-
-
+                
                 return texto;
             }
 
@@ -135,13 +142,27 @@ namespace Lab02_ED2_1273020
                     if ("INSERT" == values[0]) //Si es "INSERT" insertará en la List para el json
                     {
                         a++;//Sumo en 1 el contador cuando se inserte un elemento a la lista
-                        listaJSon.Add_Lista(personaN.name, personaN.dpi, personaN.datebirth, personaN.address,personaN.companies, personaN);//Llamada a añadir a la lista
+
+                        for(int i=0; i < personaN.companies.Length; i++)
+                     {
+                       // personaN.companies[i] = personaN.companies[i].Replace(" ", String.Empty);
+                        personaN.companies[i]=LZ_Comprimir(personaN.listaCOmp, personaN.companies[i]+personaN.dpi);
+                    }
+
+
+                    listaJSon.Add_Lista(personaN.name, personaN.dpi, personaN.datebirth, personaN.address,personaN.companies, personaN);//Llamada a añadir a la lista
                     }
                     else if ("PATCH" == values[0])//Si es "Patch" actualizará en la lista
                     {
                         //Sumo en 1 el contador cuando se actualice un elemento a la lista
                         c++;
-                        listaJSon.EditItem(personaN.name, personaN.dpi, personaN.datebirth, personaN.address,personaN.companies, personaN);//Lamada a editar
+
+                    for (int i = 0; i < personaN.companies.Length; i++)
+                    {
+                       // personaN.companies[i] = personaN.companies[i].Replace(" ",String.Empty);
+                        personaN.companies[i] = LZ_Comprimir(personaN.listaCOmp, personaN.companies[i] + personaN.dpi);
+                    }
+                    listaJSon.EditItem(personaN.name, personaN.dpi, personaN.datebirth, personaN.address,personaN.companies, personaN);//Lamada a editar
                     }
                     else if ("DELETE" == values[0])//Si es "DELETE" eliminará el elemento deseado en la lista
                     {
@@ -197,11 +218,11 @@ namespace Lab02_ED2_1273020
                                 varaux++;//Incremento mi auxiliar si encontró la persona
                                          //Escribo en consola la paersona buscada
                                 Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name + "\t dpi: " + listaJSon.Get(i).dpi + "\t dateBirth: " + listaJSon.Get(i).datebirth + "\t address: " + listaJSon.Get(i).address);
-                            foreach (var s in listaJSon.Get(i).companies)
-                            {
-                                Console.WriteLine(s);
-                            }
-                            string jsonSalida = JsonSerializer.Serialize(listaJSon.Get(i));//Vuelvo a serializarlo en un jSon
+                                foreach (var s in listaJSon.Get(i).companies)
+                                {
+                                    Console.WriteLine(LZ_Descomprimir(listaJSon.Get(i).listaCOmp,s));
+                                }
+                                string jsonSalida = JsonSerializer.Serialize(listaJSon.Get(i));//Vuelvo a serializarlo en un jSon
                                 File.AppendAllText(LugarArchivoSalida, "\n" + jsonSalida);//Se realiza la escritura de salida en otro archivo
                             }
 
@@ -221,7 +242,8 @@ namespace Lab02_ED2_1273020
                             Console.WriteLine("\tcompanies: ");
                         foreach (var s in listaJSon.Get(i).companies)
                         {
-                            Console.WriteLine(s);
+                            Console.WriteLine(LZ_Descomprimir(listaJSon.Get(i).listaCOmp, s));
+                           // Console.WriteLine(s);
                         }
                     }
 
