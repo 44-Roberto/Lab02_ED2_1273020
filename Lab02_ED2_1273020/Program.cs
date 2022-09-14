@@ -119,7 +119,7 @@ namespace Lab02_ED2_1273020
 
             //Comienza el procedimiento de lectura del archivo
             //************* SE DEBE DE INSERTAR LA DIRECCIÓN DEL ARCHIVO***************
-            var reader = new StreamReader(File.OpenRead(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\Pruebita.txt"));
+            var reader = new StreamReader(File.OpenRead(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\Pruebita2.txt"));
                 // List<string> list = new List<string>(); Listas que utilicé para pruebas pero no se utilizan
                 // List<string> list2 = new List<string>();
                 Lista<Persona> listaJSon = new Lista<Persona>(); //Instancio mi Lista para guardar los archivos del JSon
@@ -145,8 +145,9 @@ namespace Lab02_ED2_1273020
 
                         for(int i=0; i < personaN.companies.Length; i++)
                      {
-                       // personaN.companies[i] = personaN.companies[i].Replace(" ", String.Empty);
-                        personaN.companies[i]=LZ_Comprimir(personaN.listaCOmp, personaN.companies[i]+personaN.dpi);
+                        personaN.companies[i] = personaN.companies[i].Replace(" ", "_");
+                        personaN.companies[i]=LZ_Comprimir(personaN.listaCOmp, personaN.dpi+personaN.companies[i]);
+
                     }
 
 
@@ -159,8 +160,8 @@ namespace Lab02_ED2_1273020
 
                     for (int i = 0; i < personaN.companies.Length; i++)
                     {
-                       // personaN.companies[i] = personaN.companies[i].Replace(" ",String.Empty);
-                        personaN.companies[i] = LZ_Comprimir(personaN.listaCOmp, personaN.companies[i] + personaN.dpi);
+                       personaN.companies[i] = personaN.companies[i].Replace(" ","_");
+                        personaN.companies[i] = LZ_Comprimir(personaN.listaCOmp, personaN.dpi + personaN.companies[i]);
                     }
                     listaJSon.EditItem(personaN.name, personaN.dpi, personaN.datebirth, personaN.address,personaN.companies, personaN);//Lamada a editar
                     }
@@ -193,14 +194,16 @@ namespace Lab02_ED2_1273020
                 //Inicializo variables
                 int llave = 0;
                 string nombreBus = "";//Variable de Nombre para realizar la busqueda
-
+                 string dpiBus = "";//Variable de dpi para realizar la busqueda
                 //Menú
                 while (true)
                 {
                     Console.WriteLine("\n\n****  Menú  ***");
                     Console.WriteLine("1) Buscar registros por persona.");
-                    Console.WriteLine("2) Imprimir toda la lista.");
-                    Console.WriteLine("3) Salir.");
+                    Console.WriteLine("2) Mostrar la lista completa.");
+                    Console.WriteLine("3) Busqueda por DPI. (Datos no sensibles)");
+                    Console.WriteLine("4) Busqueda por DPI. (Datos sensibles)");
+                    Console.WriteLine("5) Salir.");
                     llave = Convert.ToInt16(Console.ReadLine());
                     //Leo la llave y me dirijo a la acción que quiera realizar
                     if (llave == 1)
@@ -242,18 +245,71 @@ namespace Lab02_ED2_1273020
                             Console.WriteLine("\tcompanies: ");
                         foreach (var s in listaJSon.Get(i).companies)
                         {
-                            Console.WriteLine(LZ_Descomprimir(listaJSon.Get(i).listaCOmp, s));
+                          Console.WriteLine(LZ_Descomprimir(listaJSon.Get(i).listaCOmp, s));
                            // Console.WriteLine(s);
                         }
                     }
 
                     }
-                    else if (llave == 3)
+                    else if (llave == 4)
+                    {
+                        Console.WriteLine("Ingrese el DPI a buscar.");
+                        dpiBus=Console.ReadLine();
+                        int varaux = 0;
+                        for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
+                        {
+
+                            if (listaJSon.Get(i).dpi == dpiBus)
+                            {
+                                varaux++;//Incremento mi auxiliar si encontró la persona
+                                         //Escribo en consola la paersona buscada
+                                Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name + "\t dpi: "+ listaJSon.Get(i).dpi);
+
+                                foreach (var s in listaJSon.Get(i).companies)
+                                {
+                                    
+                                    Console.WriteLine(s);
+                                }
+
+
+                        }
+
+                        }
+                        if (varaux == 0)//si no se encontró, mi auxiliar es 0 e imprimo el siguiente mensaje
+                        {
+                            Console.WriteLine("No se encontró.");
+                        }
+
+                }
+                else if (llave == 3)
+                {
+                    Console.WriteLine("Ingrese el DPI a buscar.");
+                    dpiBus = Console.ReadLine();
+                    int varaux = 0;
+                    for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
+                    {
+
+                        if (listaJSon.Get(i).dpi == dpiBus)
+                        {
+                            varaux++;//Incremento mi auxiliar si encontró la persona
+                                     //Escribo en consola la paersona buscada
+                            Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name + "\t dateBirth: " + listaJSon.Get(i).datebirth + "\t address: " + listaJSon.Get(i).address);
+
+                        }
+
+                    }
+                    if (varaux == 0)//si no se encontró, mi auxiliar es 0 e imprimo el siguiente mensaje
+                    {
+                        Console.WriteLine("No se encontró.");
+                    }
+
+                }
+                else if (llave == 5)
                     {
                         Environment.Exit(0);//Sale de la consola
                     }
 
-                }
+            }
 
 
 
