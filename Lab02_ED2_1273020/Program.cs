@@ -40,17 +40,17 @@ namespace Lab02_ED2_1273020
             string LZ_Comprimir(List<string> L_Comp, string CompDPI)
             {
                 
-                string texto = "";
-                string CompCaracter = "";
-                int index = 0;
-                int regresar = 0;
-                texto = "0 " + CompDPI[0]+"\n";
+                string texto = "";//cadena que voy a devolver
+                string CompCaracter = "";//cadena para comparar caracter
+                int index = 0;//indice
+                int regresar = 0;//return
+                texto = "0 " + CompDPI[0]+"\n";//El primer dato a ingresar no necesita revisión, por lo que debe de ingresarse de <0,"x">
                 L_Comp.Add("");//Primer elemento nulo
-                L_Comp.Add(CompDPI[0] + "");
+                L_Comp.Add(CompDPI[0] + "");//Se añade a la lista la primer letra
 
-                for (int indiceTexto = 1; indiceTexto < CompDPI.Length; indiceTexto++)
-                {
-                    CompCaracter += CompDPI[indiceTexto];
+                for (int indiceTexto = 1; indiceTexto < CompDPI.Length; indiceTexto++)//Se recorre toda la cadena
+                {//Se inicia desde la posicion 1 del string, pues la posicion 0 ya se añadió
+                    CompCaracter += CompDPI[indiceTexto];//Se añade para ir verificando si hay
 
                     if (L_Comp.IndexOf(CompCaracter) != -1)
                     {
@@ -119,7 +119,7 @@ namespace Lab02_ED2_1273020
 
             //Comienza el procedimiento de lectura del archivo
             //************* SE DEBE DE INSERTAR LA DIRECCIÓN DEL ARCHIVO***************
-            var reader = new StreamReader(File.OpenRead(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\Pruebita2.txt"));
+            var reader = new StreamReader(File.OpenRead(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\Pruebita.txt"));
                 // List<string> list = new List<string>(); Listas que utilicé para pruebas pero no se utilizan
                 // List<string> list2 = new List<string>();
                 Lista<Persona> listaJSon = new Lista<Persona>(); //Instancio mi Lista para guardar los archivos del JSon
@@ -340,7 +340,7 @@ namespace Lab02_ED2_1273020
                                             }
                                         }
 
-                                        Console.WriteLine("dpi: "+txtDpi+"\tcompañía: "+txtComp);
+                                        Console.WriteLine("dpi: "+txtDpi+"\tcompañía: "+txtComp); 
                                     }
 
 
