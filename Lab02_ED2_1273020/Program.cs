@@ -20,6 +20,8 @@ namespace Lab02_ED2_1273020
             public string[] companies { get; set; }
 
             public List<string> listaCOmp = new List<string>();
+
+            
     }
 
    
@@ -32,7 +34,7 @@ namespace Lab02_ED2_1273020
         static void Main(string[] args)
             {
 
-           
+          
             //Metodos publicos de compresion LZ78
             //Variables 
            
@@ -120,8 +122,7 @@ namespace Lab02_ED2_1273020
             //Comienza el procedimiento de lectura del archivo
             //************* SE DEBE DE INSERTAR LA DIRECCIÓN DEL ARCHIVO***************
             var reader = new StreamReader(File.OpenRead(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\Pruebita.txt"));
-                // List<string> list = new List<string>(); Listas que utilicé para pruebas pero no se utilizan
-                // List<string> list2 = new List<string>();
+                
                 Lista<Persona> listaJSon = new Lista<Persona>(); //Instancio mi Lista para guardar los archivos del JSon
 
                 //Variables de contadores
@@ -134,6 +135,7 @@ namespace Lab02_ED2_1273020
                     var values = lines.Split(';');//Realizo el split para guardar la acción y el json por separado
                                                   //Ejemplo: values[0] tiene la acción (INSERT, PATCH, DELETE).
                                                   //values[1] contiene la serialización json.
+
 
                     string jsonString = values[1];//Paso a una cadena string el contenido de values[1], que es donde está la cadena json
                     Persona personaN = JsonSerializer.Deserialize<Persona>(jsonString);//deserializo el string con el json y lo guardo en mi clase persona
@@ -178,6 +180,9 @@ namespace Lab02_ED2_1273020
 
                 }
 
+            //***********************************************************************
+                
+            
                 //Imprimo los resultados de los contadores
                 Console.WriteLine("****Se realizó la lectura del archivo correctamente***");
                 Console.WriteLine("Se realizaron: " + a + " inserciones.");
@@ -188,56 +193,24 @@ namespace Lab02_ED2_1273020
 
                 //Variable que guarda la ubicación del archivo de salida
                 //************* SE DEBE DE INSERTAR LA DIRECCIÓN DEL ARCHIVO***************
-                string LugarArchivoSalida = @"C:\Users\Roberto Moya\Desktop\Lab1-E2\Lab_01_1273020\Lab_01_1273020\bin\Debug\DocSalida.csv";
+                
 
 
                 //Inicializo variables
                 int llave = 0;
-                string nombreBus = "";//Variable de Nombre para realizar la busqueda
+               
                  string dpiBus = "";//Variable de dpi para realizar la busqueda
                 //Menú
                 while (true)
                 {
                     Console.WriteLine("\n\n****  Menú  ***");
-                    Console.WriteLine("1) Buscar registros por persona.");
-                    Console.WriteLine("2) Mostrar la lista completa.");
-                    Console.WriteLine("3) Busqueda por DPI. (Datos no sensibles)");
-                    Console.WriteLine("4) Busqueda por DPI. (Datos sensibles)");
-                    Console.WriteLine("5) Salir.");
+                    Console.WriteLine("1) Mostrar la lista completa.");
+                    Console.WriteLine("2) Busqueda carta por DPI.");
+                    Console.WriteLine("3) Salir.");
                     llave = Convert.ToInt16(Console.ReadLine());
                     //Leo la llave y me dirijo a la acción que quiera realizar
-                    if (llave == 1)
-                    {
-                        int varaux = 0;
-                        //Busqueda
-                        Console.WriteLine("Ingrese el nombre:");
-                        nombreBus = Console.ReadLine();
-
-                        for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
-                        {
-
-                            if (listaJSon.Get(i).name == nombreBus)
-                            {
-                                varaux++;//Incremento mi auxiliar si encontró la persona
-                                         //Escribo en consola la paersona buscada
-                                Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name + "\t dpi: " + listaJSon.Get(i).dpi + "\t dateBirth: " + listaJSon.Get(i).datebirth + "\t address: " + listaJSon.Get(i).address);
-                                foreach (var s in listaJSon.Get(i).companies)
-                                {
-                                    Console.WriteLine(LZ_Descomprimir(listaJSon.Get(i).listaCOmp,s));
-                                }
-                                string jsonSalida = JsonSerializer.Serialize(listaJSon.Get(i));//Vuelvo a serializarlo en un jSon
-                                File.AppendAllText(LugarArchivoSalida, "\n" + jsonSalida);//Se realiza la escritura de salida en otro archivo
-                            }
-
-                        }
-                        if (varaux == 0)//si no se encontró, mi auxiliar es 0 e imprimo el siguiente mensaje
-                        {
-                            Console.WriteLine("No se encontró.");
-                        }
-
-
-                    }
-                    else if (llave == 2)
+                    
+                    if (llave == 1)//Mostrar la lista completa
                     {
                         for (int i = 0; i < nodosFinales; i++)//Imprimo todos las personas ingresadas en la lista
                         {
@@ -248,102 +221,115 @@ namespace Lab02_ED2_1273020
                           Console.WriteLine(LZ_Descomprimir(listaJSon.Get(i).listaCOmp, s));
                            // Console.WriteLine(s);
                         }
+                        Console.WriteLine("Con las cartas de recomendacion:");
+                        string pathwDPI = "REC-" + listaJSon.Get(i).dpi + "*";
+                        string[] L_dir = Directory.GetFiles(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\inputs", pathwDPI);
+                        foreach(string dir in L_dir)
+                        {
+                            Console.WriteLine(dir);
+                        }
                     }
 
                     }
-                    else if (llave == 4)
+                    else if (llave == 2)
                     {
                         Console.WriteLine("Ingrese el DPI a buscar.");
                         dpiBus=Console.ReadLine();
                         int varaux = 0;
-                        for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
+                    for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
+                    {
+
+                        if (listaJSon.Get(i).dpi == dpiBus)
                         {
-
-                            if (listaJSon.Get(i).dpi == dpiBus)
-                            {
-                                varaux++;//Incremento mi auxiliar si encontró la persona
-                                         //Escribo en consola la paersona buscada
-                                Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name + "\t dpi: "+ listaJSon.Get(i).dpi);
-
-                                foreach (var s in listaJSon.Get(i).companies)
-                                {
-                                    
-                                    Console.WriteLine(s);
-                                }
-
-
+                            Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name + "\t dpi: " + listaJSon.Get(i).dpi);
                         }
-
-                        }
-                        if (varaux == 0)//si no se encontró, mi auxiliar es 0 e imprimo el siguiente mensaje
-                        {
-                            Console.WriteLine("No se encontró.");
-                        }
-                        int llave2=0;
+                    }
+                            int llave2=0;
                     //*********Codificar o decodificar
                     while (true)
                     {
-                        Console.WriteLine("\n\n1) Mostrar los datos codificados");
-                        Console.WriteLine("2) Mostrar los datos decodificados");
+                        string text_REC = "";
+                        string line_Path = "";
+                        List<string> LineCompress = new List<string>();
+                        Console.WriteLine("\n\n1) Mostrar las cartas codificadas");
+                        Console.WriteLine("2) Mostrar las cartas decodificadas");
                         Console.WriteLine("3) Salir al menú.");
                         llave2 = Convert.ToInt32(Console.ReadLine());
 
 
-                        if (llave2 == 1)
+                        if (llave2 == 1)//Codificadas
                         {
                             for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
                             {
 
                                 if (listaJSon.Get(i).dpi == dpiBus)
                                 {
+                                  
+                                    string pathwDPI = "REC-" + dpiBus + "*";
+                                    string[] L_dir = Directory.GetFiles(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\inputs", pathwDPI);
                                     varaux++;//Incremento mi auxiliar si encontró la persona
                                              //Escribo en consola la paersona buscada
-                                    Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name );
+                                    Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name + "\t dpi: " + listaJSon.Get(i).dpi);
 
-                                    foreach (var s in listaJSon.Get(i).companies)
+                                    int j = 0;
+                                    foreach (string dir in L_dir)
                                     {
-
-                                        Console.WriteLine(s);
+                                        text_REC = "";
+                                        line_Path = "";
+                                        var readerPath = new StreamReader(File.OpenRead(L_dir[j]));
+                                        while (!readerPath.EndOfStream)
+                                        {
+                                            text_REC = "";
+                                            line_Path = "";
+                                            line_Path = readerPath.ReadLine();
+                                            line_Path = line_Path.Replace(" ","_");
+                                            text_REC = LZ_Comprimir(LineCompress, line_Path);
+                                            
+                                            Console.WriteLine(text_REC);
+                                        }
+                                        Console.WriteLine("\n\n");
+                                        j++;
                                     }
-
 
                                 }
                             }
 
                         }
-                        else if (llave2 == 2)
+                        else if (llave2 == 2)//Decodificados
                         {
                             for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
                             {
 
                                 if (listaJSon.Get(i).dpi == dpiBus)
                                 {
+                                    string pathwDPI = "REC-" + dpiBus + "*";
+                                    string[] L_dir = Directory.GetFiles(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\inputs", pathwDPI);
                                     varaux++;//Incremento mi auxiliar si encontró la persona
                                              //Escribo en consola la paersona buscada
-                                    Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name );
-
-                                    foreach (var s in listaJSon.Get(i).companies)
+                                    Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name + "\t dpi: " + listaJSon.Get(i).dpi);
+                                    string text_RECAUX = "";
+                                    int j = 0;
+                                    foreach (string dir in L_dir)
                                     {
-                                        string txtAux = "";
-                                        txtAux =LZ_Descomprimir(listaJSon.Get(i).listaCOmp, s);
-                                        string txtDpi = "";
-                                        string txtComp = "";
-                                        for(int j = 0; j < txtAux.Length; j++)
+                                        text_REC = "";
+                                        line_Path = "";
+                                        LineCompress.Clear();
+                                        var readerPath = new StreamReader(File.OpenRead(L_dir[j]));
+                                        while (!readerPath.EndOfStream)
                                         {
-                                            if (j < 13)
-                                            {
-                                                txtDpi+= txtAux[j];
-                                            }
-                                            else
-                                            {
-                                                txtComp+=txtAux[j];
-                                            }
+                                            text_REC = "";
+                                            line_Path = ""; 
+
+                                            line_Path = readerPath.ReadLine();
+                                            line_Path = line_Path.Replace(" ", "_");
+                                            text_REC = LZ_Comprimir(LineCompress, line_Path);
+                                            text_RECAUX = LZ_Descomprimir(LineCompress, text_REC);
+                                            text_RECAUX = text_RECAUX.Replace("_", " ");
+                                            Console.WriteLine(text_RECAUX);
                                         }
-
-                                        Console.WriteLine("dpi: "+txtDpi+"\tcompañía: "+txtComp); 
+                                        Console.WriteLine("\n\n");
+                                        j++;
                                     }
-
-
                                 }
                             }
                         }
@@ -354,30 +340,8 @@ namespace Lab02_ED2_1273020
 
                     }
                 }
+              
                 else if (llave == 3)
-                {
-                    Console.WriteLine("Ingrese el DPI a buscar.");
-                    dpiBus = Console.ReadLine();
-                    int varaux = 0;
-                    for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
-                    {
-
-                        if (listaJSon.Get(i).dpi == dpiBus)
-                        {
-                            varaux++;//Incremento mi auxiliar si encontró la persona
-                                     //Escribo en consola la paersona buscada
-                            Console.WriteLine(i + "\t name: " + listaJSon.Get(i).name + "\t dateBirth: " + listaJSon.Get(i).datebirth + "\t address: " + listaJSon.Get(i).address);
-
-                        }
-
-                    }
-                    if (varaux == 0)//si no se encontró, mi auxiliar es 0 e imprimo el siguiente mensaje
-                    {
-                        Console.WriteLine("No se encontró.");
-                    }
-
-                }
-                else if (llave == 5)
                     {
                         Environment.Exit(0);//Sale de la consola
                     }
