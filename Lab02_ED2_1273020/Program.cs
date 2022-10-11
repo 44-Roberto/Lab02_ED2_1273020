@@ -122,23 +122,33 @@ namespace Lab02_ED2_1273020
 
             string Ceasar_Encode(string ConvLine)
             {
-                string Dict = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM,.;:()/qwertyuiopasdfghjklzxcvbnm";
+                string Dict = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM,+-.;:()/qwertyuiopasdfghjklzxcvbnm_";
                 int Dict_Lenght=Dict.Length;
                 int ConvLine_Lenght=ConvLine.Length;
                 string Encode_line="";
+                string g = "";
+                string be = "";
+
                 for(int i=0; i<ConvLine_Lenght; i++)
                 {
                     for(int j=0; j<Dict_Lenght; j++)
                     {
-                        if(Dict[j] == ConvLine[i])
+                        g = Convert.ToString(Dict[j]);
+                        be = Convert.ToString(ConvLine[i]);
+                        if (g==be)
                         {
-                            if(Dict[j+4]==null)
+
+                            if ((j + 4)<= 70)
                             {
-                                Encode_line +=Dict[j+4];
+                                Encode_line += Convert.ToString(Dict[j+4]);
                             }
+                            /*else if((j + 4) == 70)
+                            {
+                                Encode_line += Convert.ToString(Dict[j+4]);
+                            }*/
                             else
                             {
-                                Encode_line += Dict[j - 4];
+                                Encode_line += Convert.ToString(Dict[j]);
                             }
                            
                         }
@@ -153,23 +163,32 @@ namespace Lab02_ED2_1273020
 
             string Ceasar_Decode(string ConvLine)
             {
-                string Dict = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM,.;:()/qwertyuiopasdfghjklzxcvbnm";
+                string Dict = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM,+-.;:()/qwertyuiopasdfghjklzxcvbnm_";
                 int Dict_Lenght = Dict.Length;
                 int ConvLine_Lenght = ConvLine.Length;
                 string Encode_line = "";
+                string g = "";
+                string be = "";
+
                 for (int i = 0; i < ConvLine_Lenght; i++)
                 {
                     for (int j = 0; j < Dict_Lenght; j++)
                     {
-                        if (Dict[j] == ConvLine[i])
+                        g = Convert.ToString(Dict[j]);
+                        be = Convert.ToString(ConvLine[i]);
+                        if (g == be)
                         {
-                            if (Dict[j - 4] == null)
+                            if ((j + 4) < 70)
                             {
-                                Encode_line += Dict[j - 4];
+                                Encode_line += Convert.ToString(Dict[j-4]);
                             }
+                            /*else if ((j + 4) == 70)
+                            {
+                                Encode_line += Convert.ToString(Dict[j-4]);
+                            }*/
                             else
                             {
-                                Encode_line += Dict[j + 4];
+                                Encode_line += Convert.ToString(Dict[j]);
                             }
 
                         }
@@ -345,9 +364,9 @@ namespace Lab02_ED2_1273020
                                             text_REC = "";
                                             line_Path = "";
                                             line_Path = readerPath.ReadLine();
-                                            line_Path = line_Path.Replace(" ","_");
-                                            text_REC = LZ_Comprimir(LineCompress, line_Path);
-                                            
+                                             line_Path = line_Path.Replace(" ","_");
+                                            //text_REC = LZ_Comprimir(LineCompress, line_Path);
+                                            text_REC = Ceasar_Encode(line_Path);
                                             Console.WriteLine(text_REC);
                                         }
                                         Console.WriteLine("\n\n");
@@ -384,9 +403,9 @@ namespace Lab02_ED2_1273020
                                             line_Path = ""; 
 
                                             line_Path = readerPath.ReadLine();
-                                            line_Path = line_Path.Replace(" ", "_");
-                                            text_REC = LZ_Comprimir(LineCompress, line_Path);
-                                            text_RECAUX = LZ_Descomprimir(LineCompress, text_REC);
+                                              line_Path = line_Path.Replace(" ", "_");
+                                            text_REC = Ceasar_Encode(line_Path);//
+                                            text_RECAUX = Ceasar_Decode(text_REC);
                                             text_RECAUX = text_RECAUX.Replace("_", " ");
                                             Console.WriteLine(text_RECAUX);
                                         }
