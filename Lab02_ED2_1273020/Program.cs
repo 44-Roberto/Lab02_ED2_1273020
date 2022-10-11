@@ -36,7 +36,7 @@ namespace Lab02_ED2_1273020
 
           
             //Metodos publicos de compresion LZ78
-            //Variables 
+            
            
 
             string LZ_Comprimir(List<string> L_Comp, string CompDPI)
@@ -118,6 +118,69 @@ namespace Lab02_ED2_1273020
                 return texto;
             }
 
+            //**********************************************
+
+            string Ceasar_Encode(string ConvLine)
+            {
+                string Dict = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM,.;:()/qwertyuiopasdfghjklzxcvbnm";
+                int Dict_Lenght=Dict.Length;
+                int ConvLine_Lenght=ConvLine.Length;
+                string Encode_line="";
+                for(int i=0; i<ConvLine_Lenght; i++)
+                {
+                    for(int j=0; j<Dict_Lenght; j++)
+                    {
+                        if(Dict[j] == ConvLine[i])
+                        {
+                            if(Dict[j+4]==null)
+                            {
+                                Encode_line +=Dict[j+4];
+                            }
+                            else
+                            {
+                                Encode_line += Dict[j - 4];
+                            }
+                           
+                        }
+                    }
+                }
+
+
+
+
+                return Encode_line ;
+            }
+
+            string Ceasar_Decode(string ConvLine)
+            {
+                string Dict = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM,.;:()/qwertyuiopasdfghjklzxcvbnm";
+                int Dict_Lenght = Dict.Length;
+                int ConvLine_Lenght = ConvLine.Length;
+                string Encode_line = "";
+                for (int i = 0; i < ConvLine_Lenght; i++)
+                {
+                    for (int j = 0; j < Dict_Lenght; j++)
+                    {
+                        if (Dict[j] == ConvLine[i])
+                        {
+                            if (Dict[j - 4] == null)
+                            {
+                                Encode_line += Dict[j - 4];
+                            }
+                            else
+                            {
+                                Encode_line += Dict[j + 4];
+                            }
+
+                        }
+                    }
+                }
+
+
+
+
+                return Encode_line;
+            }
 
             //Comienza el procedimiento de lectura del archivo
             //************* SE DEBE DE INSERTAR LA DIRECCIÓN DEL ARCHIVO***************
@@ -302,7 +365,7 @@ namespace Lab02_ED2_1273020
 
                                 if (listaJSon.Get(i).dpi == dpiBus)
                                 {
-                                    string pathwDPI = "REC-" + dpiBus + "*";
+                                    string pathwDPI = "CONV-" + dpiBus + "*";
                                     string[] L_dir = Directory.GetFiles(@"C:\Users\Roberto Moya\Desktop\Lab2-E2\Lab02_ED2_1273020\inputs", pathwDPI);
                                     varaux++;//Incremento mi auxiliar si encontró la persona
                                              //Escribo en consola la paersona buscada
@@ -348,8 +411,7 @@ namespace Lab02_ED2_1273020
 
             }
 
-
-
+            
 
 
 
