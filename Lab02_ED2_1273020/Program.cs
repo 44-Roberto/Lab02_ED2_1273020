@@ -120,7 +120,7 @@ namespace Lab02_ED2_1273020
 
             //**********************************************
 
-            string Ceasar_Encode(string ConvLine)
+            string Ceasar_Encode(string ConvLine, int cuatro)
             {
                 string Dict = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM,+-.;:()/qwertyuiopasdfghjklzxcvbnm_";
                 int Dict_Lenght=Dict.Length;
@@ -128,8 +128,8 @@ namespace Lab02_ED2_1273020
                 string Encode_line="";
                 string g = "";
                 string be = "";
-
-                for(int i=0; i<ConvLine_Lenght; i++)
+                cuatro = valLong(cuatro);
+                for (int i=0; i<ConvLine_Lenght; i++)
                 {
                     for(int j=0; j<Dict_Lenght; j++)
                     {
@@ -138,9 +138,9 @@ namespace Lab02_ED2_1273020
                         if (g==be)
                         {
 
-                            if ((j + 4)<= 70)
+                            if ((j + cuatro)<= 70)
                             {
-                                Encode_line += Convert.ToString(Dict[j+4]);
+                                Encode_line += Convert.ToString(Dict[j+ cuatro]);
                             }
                             /*else if((j + 4) == 70)
                             {
@@ -161,7 +161,25 @@ namespace Lab02_ED2_1273020
                 return Encode_line ;
             }
 
-            string Ceasar_Decode(string ConvLine)
+           int valLong(int ujs)
+            {
+                if(ujs<9&&ujs >1)
+                {
+                    return ujs;
+                }
+                else if(ujs==1||ujs==9)
+                {
+                    ujs = ujs * 2;
+                    return valLong(ujs);
+                }
+                else
+                {
+                    ujs = ujs / 10;
+                    return valLong(ujs);
+                }
+            }
+
+            string Ceasar_Decode(string ConvLine, int cuatro)
             {
                 string Dict = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM,+-.;:()/qwertyuiopasdfghjklzxcvbnm_";
                 int Dict_Lenght = Dict.Length;
@@ -169,7 +187,7 @@ namespace Lab02_ED2_1273020
                 string Encode_line = "";
                 string g = "";
                 string be = "";
-
+                 cuatro=valLong(cuatro);
                 for (int i = 0; i < ConvLine_Lenght; i++)
                 {
                     for (int j = 0; j < Dict_Lenght; j++)
@@ -178,9 +196,9 @@ namespace Lab02_ED2_1273020
                         be = Convert.ToString(ConvLine[i]);
                         if (g == be)
                         {
-                            if ((j + 4) < 70)
+                            if ((j + cuatro) < 70)
                             {
-                                Encode_line += Convert.ToString(Dict[j-4]);
+                                Encode_line += Convert.ToString(Dict[j- cuatro]);
                             }
                             /*else if ((j + 4) == 70)
                             {
@@ -282,12 +300,14 @@ namespace Lab02_ED2_1273020
                 int llave = 0;
                
                  string dpiBus = "";//Variable de dpi para realizar la busqueda
+            string contraseña = "";
+            int ctnLong=0;
                 //Menú
                 while (true)
                 {
                     Console.WriteLine("\n\n****  Menú  ***");
                     Console.WriteLine("1) Mostrar la lista completa.");
-                    Console.WriteLine("2) Busqueda carta por DPI.");
+                    Console.WriteLine("2) Busqueda de conversación por DPI.");
                     Console.WriteLine("3) Salir.");
                     llave = Convert.ToInt16(Console.ReadLine());
                     //Leo la llave y me dirijo a la acción que quiera realizar
@@ -317,7 +337,12 @@ namespace Lab02_ED2_1273020
                     {
                         Console.WriteLine("Ingrese el DPI a buscar.");
                         dpiBus=Console.ReadLine();
-                        int varaux = 0;
+
+                    Console.WriteLine("Ingrese la contraseña.");
+                    contraseña = Console.ReadLine();
+
+                    ctnLong = contraseña.Length;
+                    int varaux = 0;
                     for (int i = 0; i < nodosFinales; i++)//Recorro mi lista
                     {
 
@@ -333,8 +358,8 @@ namespace Lab02_ED2_1273020
                         string text_REC = "";
                         string line_Path = "";
                         List<string> LineCompress = new List<string>();
-                        Console.WriteLine("\n\n1) Mostrar las cartas codificadas");
-                        Console.WriteLine("2) Mostrar las cartas decodificadas");
+                        Console.WriteLine("\n\n1) Mostrar las conversaciones codificadas");
+                        Console.WriteLine("2) Mostrar las conversaciones decodificadas");
                         Console.WriteLine("3) Salir al menú.");
                         llave2 = Convert.ToInt32(Console.ReadLine());
 
@@ -366,7 +391,7 @@ namespace Lab02_ED2_1273020
                                             line_Path = readerPath.ReadLine();
                                              line_Path = line_Path.Replace(" ","_");
                                             //text_REC = LZ_Comprimir(LineCompress, line_Path);
-                                            text_REC = Ceasar_Encode(line_Path);
+                                            text_REC = Ceasar_Encode(line_Path,ctnLong);
                                             Console.WriteLine(text_REC);
                                         }
                                         Console.WriteLine("\n\n");
@@ -404,8 +429,8 @@ namespace Lab02_ED2_1273020
 
                                             line_Path = readerPath.ReadLine();
                                               line_Path = line_Path.Replace(" ", "_");
-                                            text_REC = Ceasar_Encode(line_Path);//
-                                            text_RECAUX = Ceasar_Decode(text_REC);
+                                            text_REC = Ceasar_Encode(line_Path,ctnLong);//
+                                            text_RECAUX = Ceasar_Decode(text_REC,ctnLong);
                                             text_RECAUX = text_RECAUX.Replace("_", " ");
                                             Console.WriteLine(text_RECAUX);
                                         }
